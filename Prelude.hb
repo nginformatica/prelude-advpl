@@ -25,6 +25,21 @@
 #include "SyntaxAbstraction.hb"
 
 /**
+ * Returns a new list which contains only the truthy values of the inputted.
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Compact( aList )
+	@BUILD ACCUMULATOR aAccum
+	For nI := 1 To Len( aList )
+		If aList[ nI ]
+			aAdd( aAccum, aList[ nI ] )
+		EndIf
+	Next nI
+	Return aAccum
+
+/**
  * Applies a function to each item in the list and returns the original list.
  * Used for side effects.
  * length as the input.
@@ -39,6 +54,62 @@ Prelude Function Each( bBlock, aList )
 		Eval( bBlock, aList[ nI ] )
 	Next nI
 	Return aList
+
+/**
+ * Returns a new list composed of the items which pass the supplied function's
+ * test.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Filter( bBlock, aList )
+	@BUILD ACCUMULATOR aAccum
+	For nI := 1 To Len( aList )
+		If Eval( bBlock, aList[ nI ] )
+			aAdd( aAccum, aList[ nI ] )
+		EndIf
+	Next nI
+	Return aAccum
+
+/**
+ * Returns the first item in list to pass the function's test. Returns undefined
+ * if all items fail the test.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Find( bBlock, aList )
+	Local nI
+	For nI := 1 To Len( aList )
+		If Eval( bBlock, aList[ nI ] )
+			Return aList[ nI ]
+		EndIf
+	Next nI
+	Return Nil
+
+/**
+ * The first item of the list. Returns undefined if the list is empty.
+ * @param Array
+ * @return Mixed
+ * @author Marcelo Camargo
+ */
+Prelude Function Head( aList )
+	Return aList[ 1 ]
+
+/**
+ * Everything but the last item of the list.
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Initial( aList )
+	@BUILD FIXED ACCUMULATOR aAccum<( Len( aList ) - 1 )>
+	For nI := 1 To ( Len ( aList ) - 1 )
+		aAccum[ nI ] := aList[ nI ]
+	Next nI
+	Return aAccum
 
 /**
  * Applies a function to each item in the list, and produces a new list with
@@ -71,6 +142,43 @@ Prelude Function Range( nStart, nEnd )
 	Return aAccum
 
 /**
+ * Equivalent to [(filter f, xs), (reject f, xs)], but more efficient, using
+ * only one loop.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Partition( bBlock, aList )
+	Local aAccum := { { }, { } } ;
+	    , nI
+	For nI := 1 To Len( aList )
+		If Eval( bBlock, aList[ nI ] )
+			aAdd( aAccum[ 1 ], aList[ nI ] )
+		Else
+			aAdd( aAccum[ 2 ], aList[ nI ] )
+		EndIf
+	Next nI
+	Return aAccum
+
+/**
+ * Like filter, but the new list is composed of all the items which fail the
+ * function's test.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Reject( bBlock, aList )
+	@BUILD ACCUMULATOR aAccum
+	For nI := 1 To Len( aList )
+		If !Eval( bBlock, aList[ nI ] )
+			aAdd( aAccum, aList[ nI] )
+		EndIf
+	Next nI
+	Return aAccum
+
+/**
  * Receives two integers and returns an array following that range stepping by
  * the <nNext> - <nStart> value.
  * @param Number
@@ -85,3 +193,12 @@ Prelude Function StepRange( nStart, nEnd, nNext )
 		aAdd( aAccum, nI )
 	Next nI
 	Return aAccum
+
+/**
+ * Everything but the first item of the list.
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Tail( aList )
+	Return aDel( aList, 1 )
