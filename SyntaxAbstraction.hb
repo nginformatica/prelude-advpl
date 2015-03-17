@@ -65,9 +65,12 @@
  * array-append ::= <ident>[] := <expr>
  */
 #xtranslate <cVar>\[\] := <expr> => aAdd( <cVar>, <expr> )
+<<<<<<< HEAD
 /**
  * Use DRY methodology by avoiding code to be repeated
  */
 #xtranslate @BUILD ACCUMULATOR <cAcc> => Local <cAcc> := { }, nI
 #xtranslate @BUILD FIXED ACCUMULATOR <cAcc>\< <nSize> \> => ;
 	Local <cAcc> := Array( <nSize> ), nI
+=======
+>>>>>>> 8ca9d10b4552d7c2e40241ac023cb41acc64e332
