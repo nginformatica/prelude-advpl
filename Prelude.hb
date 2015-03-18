@@ -394,6 +394,12 @@ Prelude Function Partition( bBlock, aList )
 	Return aAccum
 
 /**
+ * @return Number
+ */
+Prelude Function Pi()
+	Return 3.141592653589793
+
+/**
  * Gets the product of all the items in the list.
  * @param Array
  * @return Number

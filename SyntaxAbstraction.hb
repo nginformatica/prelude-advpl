@@ -40,6 +40,7 @@
  * syntactic abstraction to handle this.
  * prelude-call ::= @<ident> { <expr> [, <expr> [, <expr> ] ] }
  */
+#xtranslate @<cName> { } => Z_<cName>()
 #xtranslate @<cName> { <arg1> } => Z_<cName>( <arg1> )
 #xtranslate @<cName> { <arg1>, <arg2> } => Z_<cName>( <arg1>, <arg2> )
 #xtranslate @<cName> { <arg1>, <arg2>, <arg3> } => ;
