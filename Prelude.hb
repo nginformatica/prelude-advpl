@@ -154,6 +154,15 @@ Prelude Function ElemIndices( xElem, aList )
 	Return aAccum
 
 /**
+ * Is the number even?
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Prelude Function Even( nA )
+	Return nA % 2 == 0
+
+/**
  * Returns a new list composed of the items which pass the supplied function's
  * test.
  * @param Block
@@ -339,6 +348,15 @@ Prelude Function Minimum( aList )
  */
 Prelude Function Negate( nI )
 	Return -( nI )
+
+/**
+ * Is the number odd?
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Prelude Function Odd( nA )
+	Return nA % 2 <> 0
 
 /**
  * Returns true if any item in the list is true, otherwise returns false.
