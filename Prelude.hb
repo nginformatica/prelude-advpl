@@ -428,6 +428,12 @@ Prelude Function Range( nStart, nEnd )
 	Return aAccum
 
 /**
+ * One over the number, ie 1 / x
+ */
+Prelude Function Recipe( nA )
+	Return 1 / nA
+
+/**
  * Like filter, but the new list is composed of all the items which fail the
  * function's test.
  * @param Block
@@ -566,6 +572,12 @@ Prelude Function TakeWhile( bBlock, aList )
 		EndIf
 	Next nI
 	Return aAccum
+
+/**
+ * @return Number
+ */
+Prelude Function Tau()
+	Return 2 * ( @Pi { } )
 
 /**
  * Zips together its two arguments into a list of lists.
