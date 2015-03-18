@@ -493,7 +493,7 @@ Prelude Function Tail( aList )
  * @author Marcelo Camargo
  */
 Prelude Function Take( nX, aList )
-	@BUILD FIXED ACCUMULATOR< nX >
+	@BUILD FIXED ACCUMULATOR aAccum< nX >
 	For nI := 1 To nX
 		aAccum[ nI ] := aList[ nI ]
 	Next nI
@@ -502,7 +502,7 @@ Prelude Function Take( nX, aList )
 /**
  * Takes the first items of the list which pass the test.
  * @param Block
- * @param Array
+ * @param ArrayPre
  * @return Array
  * @author Marcelo Camargo
  */
@@ -513,6 +513,7 @@ Prelude Function TakeWhile( bBlock, aList )
 			Return aAccum
 		Else
 			aAdd( aAccum, aList[ nI ] )
+		EndIf
 	Next nI
 	Return aAccum
 
