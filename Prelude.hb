@@ -222,6 +222,22 @@ Prelude Function FindIndices( bBlock, aList )
 	Return aAccum
 
 /**
+ * Greatest common denominator.
+ * @param Number
+ * @param Number
+ * @return Number
+ * @author Marcelo Camargo
+ */
+Prelude Function GCD( nA, nB )
+	Local nTmp
+	Do While nB > 0
+		nTmp := nB
+		nB := nA % nB
+		nA = nTmp
+	EndDo
+	Return Int( nA )
+
+/**
  * The first item of the list. Returns undefined if the list is empty.
  * @param Array
  * @return Mixed
@@ -242,6 +258,16 @@ Prelude Function Initial( aList )
 		aAccum[ nI ] := aList[ nI ]
 	Next nI
 	Return aAccum
+
+/**
+ * Least common multiple.
+ * @param Number
+ * @param Number
+ * @return Number
+ * @author Marcelo Camargo
+ */
+Prelude Function LCM( nA, nB )
+	Return Int( nA * ( nB / @GCD { nA, nB } ) )
 
 /**
  * Applies a function to each item in the list, and produces a new list with

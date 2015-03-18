@@ -1,5 +1,5 @@
 #include "Prelude.hb"
 
 Function Main()
-	? AllTrim >>= Str In @Sum { @{ 1 .. 10 } }
+	? AllTrim >>= Str In @LCM { 12, 18 }
 	Return
