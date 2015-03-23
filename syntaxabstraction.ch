@@ -72,3 +72,15 @@
 #xtranslate @BUILD ACCUMULATOR <cAcc> => Local <cAcc> := { }, nI
 #xtranslate @BUILD FIXED ACCUMULATOR <cAcc>\< <nSize> \> => ;
 	Local <cAcc> := Array( <nSize> ), nI
+
+/**
+ * Validator
+ */
+/*
++-----------------------------------------------+
+| TODO                                          |
++-----------------------------------------------+
+| CPF, CNPJ                                     |
++-----------------------------------------------+*/
+#xtranslate Validate Function <cName> => Function V_<cName>
+#xtranslate @Validate\<<cData>\> <xExpr> => V_<cData>( <xExpr> )

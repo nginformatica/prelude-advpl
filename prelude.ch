@@ -631,3 +631,64 @@ Prelude Function ZipWith( bBlock, aA, aB )
 		aAdd( aAccum, Eval( bBlock, aA[ nI ], aB[ nI ] ) )
 	Next nI
 	Return aAccum
+	
+/**
+ * Validates a positive number
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Positive( nNum )
+   Return nNum > 0
+   
+/**
+ * Validates a negative number
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Negative( nNum )
+	Return nNum < 0
+
+/**
+ * Validates an even number
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Even( nNum )
+	Return nNum % 2 == 0
+
+/**
+ * Validates an odd number
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Odd( nNum )
+	Return nNum % 2 <> 0
+
+/**
+ * Validates a single name
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Name( cName )
+	Local aName := @Explode { cName } ;
+	    , nI
+	For nI := 1 To Len( aName )
+		If !IsAlpha( aName[ nI ] ) .And. aName[ nI ] <> " "
+			Return .F.
+		EndIf
+	Next nI
+	Return .T.
+
+/**
+ * Validates if a value is numeric
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Number( cVal )
+	Return IsDigit( cVal )
