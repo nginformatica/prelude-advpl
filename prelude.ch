@@ -731,6 +731,48 @@ Validate Function CEP( cCEP )
 	Return .T.
 
 /**
+ * Validates a brazilian CPF.
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function CPF( cCPF )
+	Local aFstCalc   := @Reverse { @{ 2 .. 11 } } ;
+	    , aCPF       := @Explode { cCPF }  ;
+	    , aCPFDigits := @Take { 10, aCPF } ;
+	    , aFstZipped := aSndZipped := { }  ;
+	    , nSumValues := 0   ;
+	    , nRem
+
+	If Len( aFstCalc ) <> Len( aCPFDigits )
+		Return .F.
+	EndIf
+
+	aFstZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, @Tail { aFstCalc }, @Map { { |Digit| ;
+	                         Val( Digit ) }, @Initial { aCPFDigits } } }
+
+	nSumValues := @Sum { aFstZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	If Val( aCPF[10] ) <> IIf( nRem < 2, 0, 11 - nRem )
+		Return .F.
+	EndIf
+
+	aSndZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCPFDigits } }
+
+	nSumValues := @Sum { aSndZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	If Val( aCPF[11] ) <> IIf( nRem < 2, 0, 11 - nRem )
+		Return .F.
+	EndIf
+	Return .T.
+
+/**
  * Validates an-email.
  * @param String
  * @return Bool
@@ -819,56 +861,3 @@ Validate Function Odd( nNum )
  */
 Validate Function Positive( nNum )
    Return nNum > 0
-
-/**
- * Validates a brazilian CPF.
- * @param String
- * @return Bool
- * @author Marcelo Camargo
- */
-Validate Function CPF( cCPF )
-	Local aFstCalc   := @Reverse { @{ 2 .. 11 } } ;
-	    , aCPF       := @Explode { cCPF } ;
-	    , aCPFDigits := @Take { 10, aCPF } ;
-	    , aFstZipped := { } ;
-	    , aSndZipped := { } ;
-	    , nSumValues := 0   ;
-	    , nRem              ;
-	    , nFstVer, nSndVer  ;
-	    , aux := { |X| Alert( Str( X ) ) }
-
-	If Len( aFstCalc ) <> Len( aCPFDigits )
-		Return .F.
-	EndIf
-
-	aFstZipped := @ZipWith { { |X, Y| ;
-		X * Y ;
-	}, @Tail { aFstCalc }, @Map { { |Digit| ;
-	                         Val( Digit ) }, @Initial { aCPFDigits } } }
-
-	nSumValues := @Sum { aFstZipped }
-	nRem       := Int( nSumValues % 11 )
-
-	nFstVer    := IIf( nRem < 2  ;
-	,	/* then      */        0  ;
-	,	/* otherwise */ 11 - nRem )
-
-	If Val( aCPF[10] ) <> nFstVer
-		Return .F.
-	EndIf
-
-	aSndZipped := @ZipWith { { |X, Y| ;
-		X * Y ;
-	}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCPFDigits } }
-
-	nSumValues := @Sum { aSndZipped }
-	nRem       := Int( nSumValues % 11 )
-
-	nSndVer    := IIf( nRem < 2  ;
-	,	/* then      */        0  ;
-	,	/* otherwise */ 11 - nRem )
-
-	If Val( aCPF[11] ) <> nSndVer
-		Return .F.
-	EndIf
-	Return .T.
