@@ -844,7 +844,7 @@ Validate Function CPF( cCPF )
 	aFstZipped := @ZipWith { { |X, Y| ;
 		X * Y ;
 	}, @Tail { aFstCalc }, @Map { { |Digit| ;
-										Val( Digit ) }, @Initial { aCPFDigits } } }
+	                         Val( Digit ) }, @Initial { aCPFDigits } } }
 
 	nSumValues := @Sum { aFstZipped }
 	nRem       := Int( nSumValues % 11 )
