@@ -1,5 +1,9 @@
-#include "Prelude.hb"
+#include "prelude.ch"
 
-Function Main()
-	? AllTrim >>= Str In @Recipe { 4 }
-	Return
+Function Prelude()
+   If @Validate<CEP> "88590-000"
+   	Alert( "CEP VALIDO" )
+   Else
+   	Alert( "CEP INVALIDO" )
+   EndIf
+   Return 1

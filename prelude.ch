@@ -120,6 +120,22 @@ Prelude Function Each( bBlock, aList )
 	Return aList
 
 /**
+ * Almost the same as each, but applies with two parameters, both item and 
+ * index. This is useful when you really need to know the position which the
+ * element is on.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function EachIndex( bBlock, aList )
+	Local nI
+	For nI := 1 To Len( aList )
+		Eval( bBlock, aList[ nI ], nI )
+	Next nI
+	Return aList
+
+/**
  * Returns the index of the first occurrence of the supplied element in the
  * list. Returns undefined if the element is not found.
  * @param Mixed
@@ -314,6 +330,22 @@ Prelude Function Map( bBlock, aList )
 	@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
 	For nI := 1 To Len( aList )
 		aAccum[ nI ] := Eval( bBlock, aList[ nI ] )
+	Next nI
+	Return aAccum
+
+/**
+ * Almost the same as map, but applies with two parameters, both item and index.
+ * This is useful when you really need to know the position which the element
+ * is on.
+ * @param Block
+ * @param Array
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function MapIndex( bBlock, aList )
+	@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
+	For nI := 1 To Len( aList )
+		aAccum[ nI ] := Eval( bBlock, aList[ nI ], nI )
 	Next nI
 	Return aAccum
 
@@ -556,6 +588,49 @@ Prelude Function Sum( aList )
 	Return nSum
 
 /**
+ * Takes a delimiter and a string. Returns an array separating the string by
+ * the given delimiter.
+ * @param String
+ * @param String
+ * @return Array
+ * @author Marcelo Camargo
+ */
+Prelude Function Split( cDelim, cStr )
+	Local nIndex  := 1   ;
+	    , cString := ""  ;
+	    , aAccum  := { } ;
+
+	Do While nIndex <= Len( cStr )
+		If !( cStr[ nIndex ] $ cDelim )
+			cString += cStr[ nIndex ]
+		Else
+			If cString <> ""
+				aAdd( aAccum, cString )
+				cString := ""
+			EndIf
+		EndIf
+		nIndex += 1
+	EndDo
+	If cString <> ""
+		aAdd( aAccum, cString )
+	EndIf
+	Return aAccum
+
+/**
+ * Converts an array of characters in a string.
+ * @param Array
+ * @return String
+ * @author Marcelo Camargo
+ */
+Prelude Function Stringify( aStr )
+	Local cVal := "" ;
+	    , nI
+	For nI := 1 To Len( aStr )
+		cVal += aStr[ nI ]
+	Next nI
+	Return cVal
+
+/**
  * Everything but the first item of the list.
  * @param Array
  * @return Array
@@ -631,27 +706,57 @@ Prelude Function ZipWith( bBlock, aA, aB )
 		aAdd( aAccum, Eval( bBlock, aA[ nI ], aB[ nI ] ) )
 	Next nI
 	Return aAccum
-	
-/**
- * Validates a positive number
- * @param Number
- * @return Bool
- * @author Marcelo Camargo
- */
-Validate Function Positive( nNum )
-   Return nNum > 0
-   
-/**
- * Validates a negative number
- * @param Number
- * @return Bool
- * @author Marcelo Camargo
- */
-Validate Function Negative( nNum )
-	Return nNum < 0
 
 /**
- * Validates an even number
+ * Validates a brazilian CEP
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function CEP( cCEP )
+	Local aCEP   := @Explode { cCEP } ;
+	    , bValid := { |Elem, Index| ;
+         IIf( Index == 6, .T., IsDigit( Elem ) ) ;
+	    }
+
+	If Len( aCEP ) <> 9 .Or. @ElemIndex { "-", aCEP } <> 6 ;
+	   .Or. !@AndList { @MapIndex { bValid, aCEP } }
+
+		Return .F.
+	EndIf
+	Return .T.
+
+/**
+ * Validates an-email.
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Email( cEmail )
+	Local aEmail       := @Explode { cEmail } ;
+	    , nIndexOfAt   := @ElemIndex "@" of aEmail ;
+	    , aEmailName   := @Slice { 1, nIndexOfAt - 1, aEmail } ;
+	    , aEmailDomain := @Slice { nIndexOfAt + 1 , Len( aEmail ), aEmail } ;
+	    , aDomainParts := @Split { ".", aEmailDomain } ;
+	    , aIndicesOfAt := @ElemIndices "@" Of aEmail
+
+	Local bIsValid := { |Char| ;
+		Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-" ;
+	}
+
+	If Len( aIndicesOfAt ) <> 1 ;
+		.Or. ( Len( aEmailName ) < 1 .Or. Len( aEmailDomain ) < 3 ) ;
+		.Or. @ElemIndex { ".", aEmailDomain } == Nil ;
+		.Or. !@AndList { @Map { bIsValid, aEmailName } } ;
+		.Or. !@AndList { @Map { bIsValid, aEmailDomain } } ;
+		.Or. Len( aDomainParts[ Len( aDomainParts) ] ) < 2
+
+		Return .F.
+	EndIf
+	Return .T.
+
+/**
+ * Validates an even number.
  * @param Number
  * @return Bool
  * @author Marcelo Camargo
@@ -660,16 +765,7 @@ Validate Function Even( nNum )
 	Return nNum % 2 == 0
 
 /**
- * Validates an odd number
- * @param Number
- * @return Bool
- * @author Marcelo Camargo
- */
-Validate Function Odd( nNum )
-	Return nNum % 2 <> 0
-
-/**
- * Validates a single name
+ * Validates a single name.
  * @param String
  * @return Bool
  * @author Marcelo Camargo
@@ -685,10 +781,37 @@ Validate Function Name( cName )
 	Return .T.
 
 /**
- * Validates if a value is numeric
+ * Validates a negative number.
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Negative( nNum )
+	Return nNum < 0
+
+/**
+ * Validates if a value is numeric.
  * @param String
  * @return Bool
  * @author Marcelo Camargo
  */
 Validate Function Number( cVal )
 	Return IsDigit( cVal )
+
+/**
+ * Validates an odd number.
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Odd( nNum )
+	Return nNum % 2 <> 0
+
+/**
+ * Validates a positive number.
+ * @param Number
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function Positive( nNum )
+   Return nNum > 0
