@@ -637,7 +637,11 @@ Prelude Function Stringify( aStr )
  * @author Marcelo Camargo
  */
 Prelude Function Tail( aList )
-	Return aDel( aList, 1 )
+	@BUILD ACCUMULATOR aAccum
+	For nI := 2 To Len( aList )
+		aAdd( aAccum, aList[ nI ] )
+	Next nI
+	Return aAccum
 
 /**
  * Returns the first n items in the list.
@@ -734,7 +738,7 @@ Validate Function CEP( cCEP )
  */
 Validate Function Email( cEmail )
 	Local aEmail       := @Explode { cEmail } ;
-	    , nIndexOfAt   := @ElemIndex "@" of aEmail ;
+	    , nIndexOfAt   := @ElemIndex "@" Of aEmail ;
 	    , aEmailName   := @Slice { 1, nIndexOfAt - 1, aEmail } ;
 	    , aEmailDomain := @Slice { nIndexOfAt + 1 , Len( aEmail ), aEmail } ;
 	    , aDomainParts := @Split { ".", aEmailDomain } ;
@@ -815,3 +819,56 @@ Validate Function Odd( nNum )
  */
 Validate Function Positive( nNum )
    Return nNum > 0
+
+/**
+ * Validates a brazilian CPF.
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function CPF( cCPF )
+	Local aFstCalc   := @Reverse { @{ 2 .. 11 } } ;
+	    , aCPF       := @Explode { cCPF } ;
+	    , aCPFDigits := @Take { 10, aCPF } ;
+	    , aFstZipped := { } ;
+	    , aSndZipped := { } ;
+	    , nSumValues := 0   ;
+	    , nRem              ;
+	    , nFstVer, nSndVer  ;
+	    , aux := { |X| Alert( Str( X ) ) }
+
+	If Len( aFstCalc ) <> Len( aCPFDigits )
+		Return .F.
+	EndIf
+
+	aFstZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, @Tail { aFstCalc }, @Map { { |Digit| ;
+										Val( Digit ) }, @Initial { aCPFDigits } } }
+
+	nSumValues := @Sum { aFstZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	nFstVer    := IIf( nRem < 2  ;
+	,	/* then      */        0  ;
+	,	/* otherwise */ 11 - nRem )
+
+	If Val( aCPF[10] ) <> nFstVer
+		Return .F.
+	EndIf
+
+	aSndZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCPFDigits } }
+
+	nSumValues := @Sum { aSndZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	nSndVer    := IIf( nRem < 2  ;
+	,	/* then      */        0  ;
+	,	/* otherwise */ 11 - nRem )
+
+	If Val( aCPF[11] ) <> nSndVer
+		Return .F.
+	EndIf
+	Return .T.
