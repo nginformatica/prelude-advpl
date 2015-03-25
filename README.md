@@ -1,6 +1,6 @@
-# Prelude-Harbour
-A Harbour library for list handling compatible with AdvPL
+# Prelude AdvPL
+An AdvPL library for list handling compatible with Harbour.
 
-## How to use?
+## Looking for documentation?
 
-``#include "Prelude.hb"``
+[http://prelude.readthedocs.org/](http://prelude.readthedocs.org/)
