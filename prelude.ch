@@ -1,8 +1,9 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Marcelo Camargo <marcelocamargo@linuxmail.org>
- * 
+ * Copyright (c) 2015 NG Informática - TOTVS Software Partner
+ * Author        Marcelo Camargo <marcelocamargo@linuxmail.org>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -106,7 +107,7 @@ Prelude Function Concat( aList )
 /**
  * Applies a function to each item in the list and returns the original list.
  * Used for side effects.
- * length as the input.
+ * Length as the input.
  * @param Block
  * @param Array
  * @return Array
@@ -213,7 +214,7 @@ Prelude Function Filter( bBlock, aList )
  * if all items fail the test.
  * @param Block
  * @param Array
- * @return Array
+ * @return Mixed
  * @author Marcelo Camargo
  */
 Prelude Function Find( bBlock, aList )
@@ -247,7 +248,7 @@ Prelude Function FindIndex( bBlock, aList )
  * Returns an empty list if the predicate never passes.
  * @param Block
  * @param Array
- * @return Number
+ * @return Array
  * @author Marcelo Camargo
  */
 Prelude Function FindIndices( bBlock, aList )
@@ -449,6 +450,7 @@ Prelude Function Partition( bBlock, aList )
 	Return aAccum
 
 /**
+ * Returns pi (Really!?).
  * @return Number
  */
 Prelude Function Pi()
@@ -484,6 +486,9 @@ Prelude Function Range( nStart, nEnd )
 
 /**
  * One over the number, ie 1 / x
+ * @param Number
+ * @return Number
+ * @author Marcelo Camargo
  */
 Prelude Function Recipe( nA )
 	Return 1 / nA
@@ -558,7 +563,7 @@ Prelude Function Sort( aList )
 	Return aSort( aList )
 
 /**
- * Receives two integers and returns an array following that range stepping by
+ * Receives three integers and returns an array following that range stepping by
  * the <nNext> - <nStart> value.
  * @param Number
  * @param Number
@@ -676,7 +681,9 @@ Prelude Function TakeWhile( bBlock, aList )
 	Return aAccum
 
 /**
+ * 2 x Pi { }
  * @return Number
+ * @author Marcelo Camargo
  */
 Prelude Function Tau()
 	Return 2 * ( Z_PI() )
@@ -712,6 +719,33 @@ Prelude Function ZipWith( bBlock, aA, aB )
 	Return aAccum
 
 /**
+ * Casts a value to an integer
+ * @param Mixed
+ * @return Number<Int>
+ * @author Marcelo Camargo
+ */
+Cast Function Int( cVal )
+	Return Int( cVal )
+
+/**
+ * Casts a value to a number
+ * @param Mixed
+ * @return Number
+ * @author Marcelo Camargo
+ */
+Cast Function Num( cVal )
+	Return Val( cVal )
+
+/**
+ * Casts a value to string
+ * @param Mixed
+ * @return String
+ * @author Marcelo Camargo
+ */
+Cast Function Str( cVal )
+	Return Str( cVal )
+
+/**
  * Validates a brazilian CEP
  * @param String
  * @return Bool
@@ -726,6 +760,44 @@ Validate Function CEP( cCEP )
 	If Len( aCEP ) <> 9 .Or. @ElemIndex { "-", aCEP } <> 6 ;
 	   .Or. !@AndList { @MapIndex { bValid, aCEP } }
 
+		Return .F.
+	EndIf
+	Return .T.
+
+/**
+ * Validates a brazilian CNPJ.
+ * @param String
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Validate Function CNPJ( cCNPJ )
+	Local aFstCalc    := { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
+		 , aSndCalc    := { 6 , 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
+	    , aCNPJ       := @Explode { cCNPJ }  ;
+	    , aCNPJDigits := @Take { 12, aCNPJ } ;
+	    , aFstZipped  := { } ;
+	    , nSumValues  := 0   ;
+	    , nRem, nFstVer
+
+	aFstZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCNPJDigits } }
+
+	nSumValues := @Sum { aFstZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	If Val( aCNPJ[13] ) <> IIf( nRem < 2, 0, 11 - nRem )
+		Return .F.
+	EndIf
+
+	aSndZipped := @ZipWith { { |X, Y| ;
+		X * Y ;
+	}, aSndCalc, @Take { 13, @Map { { |Digit| Val( Digit ) }, aCNPJ } } }
+
+	nSumValues := @Sum { aSndZipped }
+	nRem       := Int( nSumValues % 11 )
+
+	If Val( aCNPJ[14] ) <> IIf( nRem < 2, 0, 11 - nRem )
 		Return .F.
 	EndIf
 	Return .T.
@@ -786,9 +858,8 @@ Validate Function Email( cEmail )
 	    , aDomainParts := @Split { ".", aEmailDomain } ;
 	    , aIndicesOfAt := @ElemIndices "@" Of aEmail
 
-	Local bIsValid := { |Char| ;
-		Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-" ;
-	}
+	Local bIsValid := ;
+		Fun ( Char ) -> Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-"
 
 	If Len( aIndicesOfAt ) <> 1 ;
 		.Or. ( Len( aEmailName ) < 1 .Or. Len( aEmailDomain ) < 3 ) ;

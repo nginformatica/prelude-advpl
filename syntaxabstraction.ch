@@ -1,7 +1,8 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Marcelo Camargo <marcelocamargo@linuxmail.org>
+ * Copyright (c) 2015 NG Informática - TOTVS Software Partner
+ * Author        Marcelo Camargo <marcelocamargo@linuxmail.org>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,13 +75,24 @@
 	Local <cAcc> := Array( <nSize> ), nI
 
 /**
- * Validator
+ * Validate functions are prefixed by V_ to preserve the whole system and avoid
+ * ambiguity.
+ * validate-func ::= Validate Function <ident> ;
  */
-/*
-+-----------------------------------------------+
-| TODO                                          |
-+-----------------------------------------------+
-| CPF, CNPJ                                     |
-+-----------------------------------------------+*/
 #xtranslate Validate Function <cName> => Function V_<cName>
 #xtranslate @Validate\<<cData>\> <xExpr> => V_<cData>( <xExpr> )
+
+/**
+ * Cast functions are prefixed by X_ to preserve the whole system and avoid
+ * ambiguity.
+ * cast-func ::= Cast Function <ident> ;
+ */
+#xtranslate Cast Function <cName> => Function X_<cName>
+#xtranslate @\<<cData>\> <xExpr> => X_<cData>( <xExpr> )
+
+/**
+ * Syntactic sugar for lambda (or blocks, in this case)
+ */
+#xtranslate Fun ( <x> ) -> <expr> => { |<x>| <expr> }
+#xtranslate Fun ( <x>, <y> ) -> <expr> => { |<x>, <y>| <expr> }
+#xtranslate Fun ( <x>, <y>, <z> ) -> <expr> => { |<x>, <y>, <z>| <expr> }
