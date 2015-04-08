@@ -171,6 +171,16 @@ Prelude Function ElemIndices( xElem, aList )
 	Return aAccum
 
 /**
+ * Is the element empty?
+ * @param xElem
+ * @return Bool
+ * @author Marcelo Camargo
+ */
+Prelude Function Empty( xElem )
+	Return Empty( xElem )
+
+
+/**
  * Is the number even?
  * @param Number
  * @return Bool
@@ -317,6 +327,15 @@ Prelude Function Initial( aList )
  */
 Prelude Function LCM( nA, nB )
 	Return Int( nA * ( nB / Z_GCD( nA, nB ) ) )
+
+/**
+ * The length of an element.
+ * @param Mixed
+ * @return Number
+ * @author Marcelo Camargo
+ */
+Prelude Function Length( xElem )
+	Return Len( xElem )
 
 /**
  * Applies a function to each item in the list, and produces a new list with
@@ -777,7 +796,7 @@ Validate Function CNPJ( cCNPJ )
 	    , aCNPJDigits := @Take { 12, aCNPJ } ;
 	    , aFstZipped  := { } ;
 	    , nSumValues  := 0   ;
-	    , nRem, nFstVer
+	    , nRem
 
 	aFstZipped := @ZipWith { { |X, Y| ;
 		X * Y ;
@@ -860,6 +879,10 @@ Validate Function Email( cEmail )
 
 	Local bIsValid := ;
 		Fun ( Char ) -> Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-"
+
+	// @SupressWarnings
+	Z_ID( aEmail )
+	Z_ID( nIndexOfAt )
 
 	If Len( aIndicesOfAt ) <> 1 ;
 		.Or. ( Len( aEmailName ) < 1 .Or. Len( aEmailDomain ) < 3 ) ;

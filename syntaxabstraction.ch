@@ -22,6 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+ 
+/**
+ * Prelude version
+ */
+#define PRELUDE_VERSION "1.0"
 
 /**
  * Abstaction for ranges.
@@ -93,6 +98,23 @@
 /**
  * Syntactic sugar for lambda (or blocks, in this case)
  */
+#xtranslate Fun -> <expr> => { || <expr> }
 #xtranslate Fun ( <x> ) -> <expr> => { |<x>| <expr> }
 #xtranslate Fun ( <x>, <y> ) -> <expr> => { |<x>, <y>| <expr> }
 #xtranslate Fun ( <x>, <y>, <z> ) -> <expr> => { |<x>, <y>, <z>| <expr> }
+
+/**
+ * Just when not null.
+ */
+#xtranslate Just <ident>-><prop> Receives <expr> => ;
+	If <expr> \<\> Nil ; <ident>-><prop> := <expr> ; EndIf
+	
+/**
+ * Use pipes instead of commas
+ */
+#xtranslate | => ,
+
+/**
+ * Function application
+ */
+#xtranslate On <elem> <apply> <dt> => <apply>( <elem>, <dt> )
