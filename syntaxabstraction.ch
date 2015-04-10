@@ -108,11 +108,6 @@
  */
 #xtranslate Just <ident>-><prop> Receives <expr> => ;
 	If <expr> \<\> Nil ; <ident>-><prop> := <expr> ; EndIf
-	
-/**
- * Use pipes instead of commas
- */
-#xtranslate | => ,
 
 /**
  * Function application
