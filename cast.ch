@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2015 NG Informática - TOTVS Software Partner
  * Author        Marcelo Camargo <marcelocamargo@linuxmail.org>
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -23,47 +23,31 @@
  * SOFTWARE.
  */
 
-#include "syntax.ch"
-#include "cast.ch"
-#include "validate.ch"
-#include "list.ch"
-
-/**
- * Prelude version
- */
-#define PRELUDE_VERSION 1
-
-Package Prelude(Version: 1) Where
+Package Cast(Version: 1) Where
 
 	/**
-	 * Applies memoization to a function that has an Iterable<List>
-	 * @author: Marcelo Camargo
-	 * @date: 2015-04-03
+	 * Casts a value to an integer
+	 * @param Mixed
+	 * @return Number<Int>
+	 * @author Marcelo Camargo
 	 */
-	Def Memoize( bBlock, xParam )
-		/**
-		 * Array aCache: holds our temp cache.
-		 * Integer nIndex: Maybe the value of the index of the element.
-		 * Mixed xValue: Will store our value in case of processing it.
-		 */
-		Static aCache <- { { }, { } }
-		Let nIndex <- @ElemIndex { xParam, aCache[1] } ;
-		  , xValue
+	Cast Function Int( cVal )
+		Return Int( cVal )
 
-		// When there is any entry on cache, fall in this point.
-		If nIndex <> Nil
-			Return aCache[ 2 ][ nIndex ]
-		EndIf
+	/**
+	 * Casts a value to a number
+	 * @param Mixed
+	 * @return Number
+	 * @author Marcelo Camargo
+	 */
+	Cast Function Num( cVal )
+		Return Val( cVal )
 
-		// Not processed yet, let's store the value.
-		xValue <- Eval( bBlock, xParam )
-
-		// Set a KeyValuePair for data storage.
-		On aCache[1] aAdd xParam
-		On aCache[2] aAdd xValue
-
-		// Clear cache when we reach the last element.
-		If Len( aCache ) Is nIndex
-			aCache <- { { },  { } }
-		EndIf
-		Return xValue
+	/**
+	 * Casts a value to string
+	 * @param Mixed
+	 * @return String
+	 * @author Marcelo Camargo
+	 */
+	Cast Function Str( cVal )
+		Return Str( cVal )

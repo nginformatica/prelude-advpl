@@ -22,11 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
-/**
- * Prelude version
- */
-#define PRELUDE_VERSION "1.0"
 
 /**
  * Abstaction for ranges.
@@ -40,7 +35,7 @@
  * ambiguity.
  * prelude-func ::= Prelude Function <ident> ;
  */
-#xtranslate Prelude Function <cName> => Function Z_<cName>
+#xtranslate List Function <cName> => Function Z_<cName>
 /**
  * Prelude functions can receive from 1 to 3 arguments and we create a special
  * syntactic abstraction to handle this.
@@ -113,3 +108,60 @@
  * Function application
  */
 #xtranslate On <elem> <apply> <dt> => <apply>( <elem>, <dt> )
+
+/**
+ * Package definition
+ * package ::= Package <ident> Where
+ */
+#xtranslate Package <(name)> (Version: <v>) Where => ;
+   Static Package := <(name)>, _NVERSAO := <v>
+/**
+ * Assignment operator
+ * assign ::= \<-
+ */
+#xtranslate \<- => :=
+/**
+ * Temporary bindings
+ * let ::= Let <ident> \<- <expr> [, <ident> \<- <expr> ]
+ */
+#xtranslate Let => Local
+/**
+ * Extern (private) bindings
+ * extern ::= Extern <ident> \<- <expr> [, <ident> \<- <expr> ]
+ */
+#xtranslate Extern => Private
+/**
+ * Lambda expressions, they act like functions.
+ */
+#xtranslate Lambda: <expr> => { || <expr> }
+#xtranslate Lambda ( <x> ): <expr> => { |<x>| <expr> }
+#xtranslate Lambda ( <x>, <y> ): <expr> => { |<x>, <y>| <expr> }
+#xtranslate Lambda ( <x>, <y>, <z> ): <expr> => { |<x>, <y>, <z>| <expr> }
+/**
+ * Boolean abstraction
+ * bool ::= True | False
+ */
+#xtranslate False => .F.
+#xtranslate True => .T.
+/**
+ * Comparison operators
+ */
+#xtranslate Like => =
+#xtranslate Is => ==
+/**
+ * Function renamed to Def
+ */
+#xtranslate Def => Function
+/**
+ * Ternary operator
+ */
+#xtranslate If <expr> Then <t> Else <f> => IIf( <expr>, <t>, <f> )
+/**
+ * Boolean algebraic abstraction
+ */
+#xtranslate Or => .Or.
+#xtranslate And => .And.
+/**
+ * Alias to return in void methods.
+ */
+#xtranslate EndDef => Return
