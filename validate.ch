@@ -31,18 +31,17 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function CEP( cCEP )
-		Local aCEP   := @Explode { cCEP } ;
-		    , bValid := { |Elem, Index| ;
-		      	IIf( Index == 6, .T., IsDigit( Elem ) ) ;
-		      }
+	Validate Def CEP( cCEP )
+		Let aCEP   <- @Explode { cCEP }
+		Let fValid <- ( Lambda ( Elem, Index ): ;
+			If Index Is 6 Then True Else IsDigit( Elem ) )
 
-		If Len( aCEP ) <> 9 .Or. @ElemIndex { "-", aCEP } <> 6 ;
-		   .Or. !@AndList { @MapIndex { bValid, aCEP } }
+		If Len( aCEP ) <> 9 Or @ElemIndex { "-", aCEP } <> 6 ;
+		   Or !@AndList { @MapIndex { fValid, aCEP } }
 
-			Return .F.
+			Return False
 		EndIf
-		Return .T.
+		Return True
 
 	/**
 	 * Validates a brazilian CNPJ.
@@ -50,37 +49,39 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function CNPJ( cCNPJ )
-		Local aFstCalc    := { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
-			 , aSndCalc    := { 6 , 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
-		    , aCNPJ       := @Explode { cCNPJ }  ;
-		    , aCNPJDigits := @Take { 12, aCNPJ } ;
-		    , aFstZipped  := { } ;
-		    , nSumValues  := 0   ;
-		    , nRem
+	Validate Def CNPJ( cCNPJ )
+		Let aFstCalc    <- { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
+		  , aSndCalc    <- { 6 , 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
+		  , aCNPJ       <- @Explode { cCNPJ }  ;
+		  , aCNPJDigits <- @Take { 12, aCNPJ } ;
+		  , aFstZipped  <- { } ;
+		  , nSumValues  <- 0   ;
+		  , nRem
 
-		aFstZipped := @ZipWith { { |X, Y| ;
+		aFstZipped <- @ZipWith { ( Lambda ( X, Y ): ;
 			X * Y ;
-		}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCNPJDigits } }
+		), aFstCalc, @Map { ( Lambda (Digit): Val( Digit ) ), aCNPJDigits } }
 
-		nSumValues := @Sum { aFstZipped }
-		nRem       := Int( nSumValues % 11 )
+		nSumValues <- @Sum { aFstZipped }
+		nRem       <- Int( nSumValues % 11 )
 
-		If Val( aCNPJ[13] ) <> IIf( nRem < 2, 0, 11 - nRem )
-			Return .F.
+		If Val( aCNPJ[13] ) <> If nRem < 2 Then 0 Else ( 11 - nRem )
+			Return False
 		EndIf
 
-		aSndZipped := @ZipWith { { |X, Y| ;
+		aSndZipped <- @ZipWith { ( Lambda ( X, Y ): ;
 			X * Y ;
-		}, aSndCalc, @Take { 13, @Map { { |Digit| Val( Digit ) }, aCNPJ } } }
+		), aSndCalc, @Take { 13, @Map { ;
+		                            ( Lambda ( Digit ): Val( Digit ) ) ;
+		                         , aCNPJ } } }
 
-		nSumValues := @Sum { aSndZipped }
-		nRem       := Int( nSumValues % 11 )
+		nSumValues <- @Sum { aSndZipped }
+		nRem       <- Int( nSumValues % 11 )
 
-		If Val( aCNPJ[14] ) <> IIf( nRem < 2, 0, 11 - nRem )
-			Return .F.
+		If Val( aCNPJ[14] ) <> If nRem < 2 Then 0 Else ( 11 - nRem )
+			Return False
 		EndIf
-		Return .T.
+		Return True
 
 	/**
 	 * Validates a brazilian CPF.
@@ -88,73 +89,86 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function CPF( cCPF )
-		Local aFstCalc   := @Reverse { @{ 2 .. 11 } } ;
-		    , aCPF       := @Explode { cCPF }  ;
-		    , aCPFDigits := @Take { 10, aCPF } ;
-		    , aFstZipped := aSndZipped := { }  ;
-		    , nSumValues := 0   ;
-		    , nRem
+	Validate Def CPF( cCPF )
+		Let aFstCalc     <- @Reverse { @{ 2 .. 11 } } ;
+		  , aCPF       <- @Explode { cCPF }         ;
+		  , aCPFDigits <- @Take { 10, aCPF }        ;
+		  , aFstZipped <- aSndZipped <- { }         ;
+		  , nSumValues <- 0                         ;
+		  , nRem
 
 		If Len( aFstCalc ) <> Len( aCPFDigits )
-			Return .F.
+			Return False
 		EndIf
 
-		aFstZipped := @ZipWith { { |X, Y| ;
+		aFstZipped <- @ZipWith { ( Lambda ( X, Y ): ;
 			X * Y ;
-		}, @Tail { aFstCalc }, @Map { { |Digit| ;
-		                         Val( Digit ) }, @Initial { aCPFDigits } } }
+		), @Tail { aFstCalc }, @Map { ( Lambda (Digit): ;
+		                                   Val( Digit ) ;
+		                              ), @Initial { aCPFDigits } } }
 
-		nSumValues := @Sum { aFstZipped }
-		nRem       := Int( nSumValues % 11 )
+		nSumValues <- @Sum { aFstZipped }
+		nRem       <- Int( nSumValues % 11 )
 
-		If Val( aCPF[10] ) <> IIf( nRem < 2, 0, 11 - nRem )
-			Return .F.
+		If Val( aCPF[10] ) <> If nRem < 2 Then 0 Else ( 11 - nRem )
+			Return False
 		EndIf
 
-		aSndZipped := @ZipWith { { |X, Y| ;
+		aSndZipped <- @ZipWith { ( Lambda ( X, Y ): ;
 			X * Y ;
-		}, aFstCalc, @Map { { |Digit| Val( Digit ) }, aCPFDigits } }
+		), aFstCalc, @Map { ( Lambda (Digit): ;
+		                         Val( Digit ) ;
+		                    ), aCPFDigits } }
 
-		nSumValues := @Sum { aSndZipped }
-		nRem       := Int( nSumValues % 11 )
+		nSumValues <- @Sum { aSndZipped }
+		nRem       <- Int( nSumValues % 11 )
 
-		If Val( aCPF[11] ) <> IIf( nRem < 2, 0, 11 - nRem )
-			Return .F.
+		If Val( aCPF[11] ) <> If nRem < 2 Then 0 Else ( 11 - nRem )
+			Return False
 		EndIf
-		Return .T.
+		Return True
 
 	/**
-	 * Validates an-email.
+	 * Validates an e-mail.
 	 * @param String
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Email( cEmail )
-		Local aEmail       := @Explode { cEmail } ;
-		    , nIndexOfAt   := @ElemIndex "@" Of aEmail ;
-		    , aEmailName   := @Slice { 1, nIndexOfAt - 1, aEmail } ;
-		    , aEmailDomain := @Slice { nIndexOfAt + 1 , Len( aEmail ), aEmail } ;
-		    , aDomainParts := @Split { ".", aEmailDomain } ;
-		    , aIndicesOfAt := @ElemIndices "@" Of aEmail
+	Validate Def Email( cEmail )
+		Let aEmail        <- @Explode { cEmail } ;
+		  , nIndexOfAt  <- @ElemIndex "@" Of aEmail ;
+		  , aEmailName   ;
+		  , aEmailDomain ;
+		  , aDomainParts ;
+		  , aIndicesOfAt
 
-		Local bIsValid := ;
-			Fun ( Char ) -> Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-"
+		Let bIsValid <- ;
+			Lambda ( Char ): Char $ "abcdefghijklmnopqrstuvwxyz.0123456789_-"
+
+
+		If nIndexOfAt Is Nil
+			Return False
+		EndIf
+
+		aEmailName   <- @Slice { 1, nIndexOfAt - 1, aEmail }
+		aEmailDomain <- @Slice { nIndexOfAt + 1 , Len( aEmail ), aEmail }
+		aDomainParts <- @Split { ".", aEmailDomain }
+		aIndicesOfAt <- @ElemIndices "@" Of aEmail
 
 		// @SupressWarnings
-		Z_ID( aEmail )
-		Z_ID( nIndexOfAt )
+		@Id { aEmail }
+		@Id { nIndexOfAt }
 
 		If Len( aIndicesOfAt ) <> 1 ;
-			.Or. ( Len( aEmailName ) < 1 .Or. Len( aEmailDomain ) < 3 ) ;
-			.Or. @ElemIndex { ".", aEmailDomain } == Nil ;
-			.Or. !@AndList { @Map { bIsValid, aEmailName } } ;
-			.Or. !@AndList { @Map { bIsValid, aEmailDomain } } ;
-			.Or. Len( aDomainParts[ Len( aDomainParts) ] ) < 2
+			Or ( Len( aEmailName ) < 1 Or Len( aEmailDomain ) < 3 ) ;
+			Or @ElemIndex { ".", aEmailDomain } Is Nil ;
+			Or !@AndList { @Map { bIsValid, aEmailName } } ;
+			Or !@AndList { @Map { bIsValid, aEmailDomain } } ;
+			Or Len( aDomainParts[ Len( aDomainParts) ] ) < 2
 
-			Return .F.
+			Return False
 		EndIf
-		Return .T.
+		Return True
 
 	/**
 	 * Validates an even number.
@@ -162,8 +176,8 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Even( nNum )
-		Return nNum % 2 == 0
+	Validate Def Even( nNum )
+		Return nNum % 2 Is 0
 
 	/**
 	 * Validates a single name.
@@ -171,15 +185,15 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Name( cName )
-		Local aName := @Explode { cName } ;
-		    , nI
-		For nI := 1 To Len( aName )
-			If !IsAlpha( aName[ nI ] ) .And. aName[ nI ] <> " "
-				Return .F.
+	Validate Def Name( cName )
+		Let aName <- @Explode { cName } ;
+		  , nI
+		For nI <- 1 To Len( aName )
+			If !IsAlpha( aName[ nI ] ) And aName[ nI ] <> " "
+				Return False
 			EndIf
 		Next nI
-		Return .T.
+		Return True
 
 	/**
 	 * Validates a negative number.
@@ -187,7 +201,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Negative( nNum )
+	Validate Def Negative( nNum )
 		Return nNum < 0
 
 	/**
@@ -196,7 +210,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Number( cVal )
+	Validate Def Number( cVal )
 		Return IsDigit( cVal )
 
 	/**
@@ -205,7 +219,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Odd( nNum )
+	Validate Def Odd( nNum )
 		Return nNum % 2 <> 0
 
 	/**
@@ -214,5 +228,5 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Function Positive( nNum )
+	Validate Def Positive( nNum )
 		Return nNum > 0
