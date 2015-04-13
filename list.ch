@@ -33,13 +33,13 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function All( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If !Eval( bBlock, aList[ nI ] )
-				Return .F.
+				Return False
 			EndIf
 		Next nI
-		Return .T.
+		Return True
 
 	/**
 	 * Returns false if any item in the list is false, otherwise returns true.
@@ -48,13 +48,13 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function AndList( aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If !aList[ nI ]
-				Return .F.
+				Return False
 			EndIf
 		Next nI
-		Return .T.
+		Return True
 
 	/**
 	 * Returns true if any of the items in the list are true when applied to the
@@ -65,13 +65,13 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Any( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
-				Return .T.
+				Return True
 			EndIf
 		Next nI
-		Return .F.
+		Return False
 
 	/**
 	 * Returns a new list which contains only the truthy values of the inputted.
@@ -81,7 +81,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Compact( aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If aList[ nI ]
 				aAdd( aAccum, aList[ nI ] )
 			EndIf
@@ -95,10 +95,10 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Concat( aList )
-		Local aAccum := { } ;
-		    , nI, nJ
-		For nI := 1 To Len( aList )
-			For nJ := 1 To Len( aList[ nI ] )
+		Let aAccum <- { } ;
+		  , nI, nJ
+		For nI <- 1 To Len( aList )
+			For nJ <- 1 To Len( aList[ nI ] )
 				aAdd( aAccum, aList[ nI ][ nJ ] )
 			Next nJ
 		Next nI
@@ -114,8 +114,8 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Each( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			Eval( bBlock, aList[ nI ] )
 		Next nI
 		Return aList
@@ -130,8 +130,8 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function EachIndex( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			Eval( bBlock, aList[ nI ], nI )
 		Next nI
 		Return aList
@@ -145,8 +145,8 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function ElemIndex( xElem, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If aList[ nI ] == xElem
 				Return nI
 			EndIf
@@ -163,7 +163,7 @@ Package List(Version: 1) Where
 	 */
 	List Function ElemIndices( xElem, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If aList[ nI ] == xElem
 				aAdd( aAccum, nI )
 			EndIf
@@ -197,7 +197,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Explode( cStr )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( cStr )
+		For nI <- 1 To Len( cStr )
 			aAdd( aAccum, SubStr( cStr, nI, 1 ) )
 		Next nI
 		Return aAccum
@@ -212,7 +212,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Filter( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
 				aAdd( aAccum, aList[ nI ] )
 			EndIf
@@ -228,8 +228,8 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Find( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
 				Return aList[ nI ]
 			EndIf
@@ -245,8 +245,8 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function FindIndex( bBlock, aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
 				Return nI
 			EndIf
@@ -263,7 +263,7 @@ Package List(Version: 1) Where
 	 */
 	List Function FindIndices( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
 				aAdd( aAccum, nI )
 			EndIf
@@ -278,11 +278,11 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function GCD( nA, nB )
-		Local nTmp
+		Let nTmp
 		Do While nB > 0
-			nTmp := nB
-			nB   := nA % nB
-			nA   := nTmp
+			nTmp <- nB
+			nB   <- nA % nB
+			nA   <- nTmp
 		EndDo
 		Return Int( nA )
 
@@ -313,8 +313,8 @@ Package List(Version: 1) Where
 	 */
 	List Function Initial( aList )
 		@BUILD FIXED ACCUMULATOR aAccum<( Len( aList ) - 1 )>
-		For nI := 1 To ( Len ( aList ) - 1 )
-			aAccum[ nI ] := aList[ nI ]
+		For nI <- 1 To ( Len ( aList ) - 1 )
+			aAccum[ nI ] <- aList[ nI ]
 		Next nI
 		Return aAccum
 
@@ -348,8 +348,8 @@ Package List(Version: 1) Where
 	 */
 	List Function Map( bBlock, aList )
 		@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
-		For nI := 1 To Len( aList )
-			aAccum[ nI ] := Eval( bBlock, aList[ nI ] )
+		For nI <- 1 To Len( aList )
+			aAccum[ nI ] <- Eval( bBlock, aList[ nI ] )
 		Next nI
 		Return aAccum
 
@@ -364,8 +364,8 @@ Package List(Version: 1) Where
 	 */
 	List Function MapIndex( bBlock, aList )
 		@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
-		For nI := 1 To Len( aList )
-			aAccum[ nI ] := Eval( bBlock, aList[ nI ], nI )
+		For nI <- 1 To Len( aList )
+			aAccum[ nI ] <- Eval( bBlock, aList[ nI ], nI )
 		Next nI
 		Return aAccum
 
@@ -376,11 +376,11 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Maximum( aList )
-		Local nMax := aList[ 1 ] ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let nMax <- aList[ 1 ] ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			If aList[ nI ] > nMax
-				nMax := aList[ nI ]
+				nMax <- aList[ nI ]
 			EndIf
 		Next nI
 		Return nMax
@@ -392,9 +392,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Mean( aList )
-		Local nSum := 0 ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let nSum <- 0 ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			nSum += aList[ nI ]
 		Next nI
 		Return nSum / Len( aList )
@@ -406,11 +406,11 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Minimum( aList )
-		Local nMin := aList[ 1 ] ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let nMin <- aList[ 1 ] ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			If aList[ nI ] < nMin
-				nMin := aList[ nI ]
+				nMin <- aList[ nI ]
 			EndIf
 		Next nI
 		Return nMin
@@ -440,13 +440,13 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function OrList( aList )
-		Local nI
-		For nI := 1 To Len( aList )
+		Let nI
+		For nI <- 1 To Len( aList )
 			If aList[ nI ]
-				Return .T.
+				Return True
 			EndIf
 		Next nI
-		Return .F.
+		Return False
 
 	/**
 	 * Equivalent to [(filter f, xs), (reject f, xs)], but more efficient, using
@@ -457,9 +457,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Partition( bBlock, aList )
-		Local aAccum := { { }, { } } ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let aAccum <- { { }, { } } ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			If Eval( bBlock, aList[ nI ] )
 				aAdd( aAccum[ 1 ], aList[ nI ] )
 			Else
@@ -482,9 +482,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Product( aList )
-		Local nProd := 1 ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let nProd <- 1 ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			nProd *= aList[ nI ]
 		Next nI
 		Return nProd
@@ -498,7 +498,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Range( nStart, nEnd )
 		@BUILD ACCUMULATOR aAccum
-		For nI := nStart To nEnd
+		For nI <- nStart To nEnd
 			aAdd( aAccum, nI )
 		Next nI
 		Return aAccum
@@ -522,7 +522,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Reject( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If !Eval( bBlock, aList[ nI ] )
 				aAdd( aAccum, aList[ nI] )
 			EndIf
@@ -537,7 +537,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Reverse( aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := Len( aList ) To 1 Step -1
+		For nI <- Len( aList ) To 1 Step -1
 			aAdd( aAccum, aList[ nI ] )
 		Next nI
 		Return aAccum
@@ -567,7 +567,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Slice( nX, nY, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := nX To nY
+		For nI <- nX To nY
 			aAdd( aAccum, aList[ nI ] )
 		Next nI
 		Return aAccum
@@ -592,7 +592,7 @@ Package List(Version: 1) Where
 	 */
 	List Function StepRange( nStart, nEnd, nNext )
 		@BUILD ACCUMULATOR aAccum
-		For nI := nStart To nEnd Step ( nNext - nStart )
+		For nI <- nStart To nEnd Step ( nNext - nStart )
 			aAdd( aAccum, nI )
 		Next nI
 		Return aAccum
@@ -604,9 +604,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Sum( aList )
-		Local nSum := 0 ;
-		    , nI
-		For nI := 1 To Len( aList )
+		Let nSum <- 0 ;
+		  , nI
+		For nI <- 1 To Len( aList )
 			nSum += aList[ nI ]
 		Next nI
 		Return nSum
@@ -620,9 +620,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Split( cDelim, cStr )
-		Local nIndex  := 1   ;
-		    , cString := ""  ;
-		    , aAccum  := { } ;
+		Let nIndex  <- 1   ;
+		  , cString <- ""  ;
+		  , aAccum  <- { } ;
 
 		Do While nIndex <= Len( cStr )
 			If !( cStr[ nIndex ] $ cDelim )
@@ -630,7 +630,7 @@ Package List(Version: 1) Where
 			Else
 				If cString <> ""
 					aAdd( aAccum, cString )
-					cString := ""
+					cString <- ""
 				EndIf
 			EndIf
 			nIndex += 1
@@ -647,9 +647,9 @@ Package List(Version: 1) Where
 	 * @author Marcelo Camargo
 	 */
 	List Function Stringify( aStr )
-		Local cVal := "" ;
-		    , nI
-		For nI := 1 To Len( aStr )
+		Let cVal <- "" ;
+		  , nI
+		For nI <- 1 To Len( aStr )
 			cVal += aStr[ nI ]
 		Next nI
 		Return cVal
@@ -662,7 +662,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Tail( aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 2 To Len( aList )
+		For nI <- 2 To Len( aList )
 			aAdd( aAccum, aList[ nI ] )
 		Next nI
 		Return aAccum
@@ -676,8 +676,8 @@ Package List(Version: 1) Where
 	 */
 	List Function Take( nX, aList )
 		@BUILD FIXED ACCUMULATOR aAccum< nX >
-		For nI := 1 To nX
-			aAccum[ nI ] := aList[ nI ]
+		For nI <- 1 To nX
+			aAccum[ nI ] <- aList[ nI ]
 		Next nI
 		Return aAccum
 
@@ -690,7 +690,7 @@ Package List(Version: 1) Where
 	 */
 	List Function TakeWhile( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aList )
+		For nI <- 1 To Len( aList )
 			If !Eval( bBlock, aList[ nI ] )
 				Return aAccum
 			Else
@@ -716,7 +716,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Zip( aA, aB )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aA )
+		For nI <- 1 To Len( aA )
 			aAdd( aAccum, { aA[ nI ], aB[ nI ] } )
 		Next nI
 		Return aAccum
@@ -732,7 +732,7 @@ Package List(Version: 1) Where
 	 */
 	List Function ZipWith( bBlock, aA, aB )
 		@BUILD ACCUMULATOR aAccum
-		For nI := 1 To Len( aA )
+		For nI <- 1 To Len( aA )
 			aAdd( aAccum, Eval( bBlock, aA[ nI ], aB[ nI ] ) )
 		Next nI
 		Return aAccum
