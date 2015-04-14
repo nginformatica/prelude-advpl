@@ -157,3 +157,8 @@
  */
 #xtranslate Or => .Or.
 #xtranslate And => .And.
+/**
+ * Restore Default
+ */
+#xcommand DEFAULT <Desc> [, <DescN> ]      => ;
+                  __DFT__( <Desc> ) [ ; __DFT__( <DescN> ) ]
