@@ -29,7 +29,7 @@
  */
 #xtranslate @{ <nStart> .. <nEnd> } => Z_Range( <nStart>, <nEnd> )
 #xtranslate @{ <nStart>, <nNext> .. <nEnd> } => ;
-	Z_Range( <nStart>, <nEnd>, <nNext> )
+	Z_StepRange( <nStart>, <nNext>, <nEnd> )
 /**
  * Prelude functions are prefixed by Z_ to preserve the whole system and avoid
  * ambiguity.

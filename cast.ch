@@ -31,7 +31,7 @@ Package Cast(Version: 1) Where
 	 * @return Number<Int>
 	 * @author Marcelo Camargo
 	 */
-	Cast Function Int( cVal )
+	Cast Def Int( cVal )
 		Return Int( cVal )
 
 	/**
@@ -40,7 +40,7 @@ Package Cast(Version: 1) Where
 	 * @return Number
 	 * @author Marcelo Camargo
 	 */
-	Cast Function Num( cVal )
+	Cast Def Num( cVal )
 		Return Val( cVal )
 
 	/**
@@ -49,5 +49,5 @@ Package Cast(Version: 1) Where
 	 * @return String
 	 * @author Marcelo Camargo
 	 */
-	Cast Function Str( cVal )
+	Cast Def Str( cVal )
 		Return Str( cVal )
