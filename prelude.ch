@@ -36,6 +36,7 @@
 Package Prelude(Version: 1) Where
 
 	/**
+	 * WARNING: USE ONLY IN REFERENTIALLY TRANSPARENT BLOCKS/LAMBDAS.
 	 * Applies memoization to a function that has an Iterable<List>
 	 * @author: Marcelo Camargo
 	 * @date: 2015-04-03
