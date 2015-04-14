@@ -41,7 +41,7 @@ Package Prelude(Version: 1) Where
 	 * @author: Marcelo Camargo
 	 * @date: 2015-04-03
 	 */
-	Def Memoize( bBlock, xParam )
+	Function Memoize( bBlock, xParam )
 		/**
 		 * Array aCache: holds our temp cache.
 		 * Integer nIndex: Maybe the value of the index of the element.

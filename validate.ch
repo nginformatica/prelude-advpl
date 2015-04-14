@@ -31,7 +31,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def CEP( cCEP )
+	Validate Function CEP( cCEP )
 		Let aCEP   <- @Explode { cCEP }
 		Let fValid <- ( Lambda ( Elem, Index ): ;
 			If Index Is 6 Then True Else IsDigit( Elem ) )
@@ -49,7 +49,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def CNPJ( cCNPJ )
+	Validate Function CNPJ( cCNPJ )
 		Let aFstCalc    <- { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
 		  , aSndCalc    <- { 6 , 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 } ;
 		  , aCNPJ       <- @Explode { cCNPJ }  ;
@@ -89,7 +89,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def CPF( cCPF )
+	Validate Function CPF( cCPF )
 		Let aFstCalc     <- @Reverse { @{ 2 .. 11 } } ;
 		  , aCPF       <- @Explode { cCPF }         ;
 		  , aCPFDigits <- @Take { 10, aCPF }        ;
@@ -134,7 +134,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Email( cEmail )
+	Validate Function Email( cEmail )
 		Let aEmail        <- @Explode { cEmail } ;
 		  , nIndexOfAt  <- @ElemIndex "@" Of aEmail ;
 		  , aEmailName   ;
@@ -176,7 +176,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Even( nNum )
+	Validate Function Even( nNum )
 		Return nNum % 2 Is 0
 
 	/**
@@ -185,7 +185,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Name( cName )
+	Validate Function Name( cName )
 		Let aName <- @Explode { cName } ;
 		  , nI
 		For nI <- 1 To Len( aName )
@@ -201,7 +201,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Negative( nNum )
+	Validate Function Negative( nNum )
 		Return nNum < 0
 
 	/**
@@ -210,7 +210,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Number( cVal )
+	Validate Function Number( cVal )
 		Return IsDigit( cVal )
 
 	/**
@@ -219,7 +219,7 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Odd( nNum )
+	Validate Function Odd( nNum )
 		Return nNum % 2 <> 0
 
 	/**
@@ -228,5 +228,5 @@ Package Validate(Version: 1) Where
 	 * @return Bool
 	 * @author Marcelo Camargo
 	 */
-	Validate Def Positive( nNum )
+	Validate Function Positive( nNum )
 		Return nNum > 0
