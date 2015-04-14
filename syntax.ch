@@ -149,10 +149,6 @@
 #xtranslate Like => =
 #xtranslate Is => ==
 /**
- * Function renamed to Def
- */
-#xtranslate Def => Function
-/**
  * Ternary operator
  */
 #xtranslate If <expr> Then <t> Else <f> => IIf( <expr>, <t>, <f> )
@@ -161,7 +157,3 @@
  */
 #xtranslate Or => .Or.
 #xtranslate And => .And.
-/**
- * Alias to return in void methods.
- */
-#xtranslate EndDef => Return
