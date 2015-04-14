@@ -23,40 +23,22 @@
  * SOFTWARE.
  */
 
-#include "syntax.ch"
-#include "cast.ch"
-#include "validate.ch"
-#include "list.ch"
-#include "lazy.ch"
+Package Lazy(Version: 1) Where
 
-/**
- * Prelude version
- */
-#define PRELUDE_VERSION 1
+	/**
+	 * Lazy evaluation of an array bigger than 65535 with continuation.
+	 * @param Array<Array>
+	 * @return Array<Array>
+	 * @author Marcelo Camargo
+	 */
+	List Function LazyMap( bBlock, aList )
+		@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
+		Let nJ
 
-Package Prelude(Version: 1) Where
-
-
-	List Function Single( cProcess, xEnv, lExit )
-		xEnv  <- If xEnv <> Nil Then xEnv Else GetEnvServer()
-		lExit <- If lExit <> Nil Then lExit Else True
-
-		Return StartJob( cProcess, xEnv, lExit )
-
-	List Function Parallel( cProcess1, cProcess2, cProcess3, xEnv, lExit )
-		Let aStack <- { }
-
-		xEnv  <- If xEnv <> Nil Then xEnv Else GetEnvServer()
-		lExit <- If lExit <> Nil Then lExit Else True
-
-		If cProcess1 <> Nil
-			On aStack aAdd StartJob( cProcess1, xEnv, lExit )
-		EndIf
-		If cProcess2 <> Nil
-			On aStack aAdd StartJob( cProcess2, xEnv, lExit )
-		EndIf
-		If cProcess3 <> Nil
-			On aStack aAdd StartJob( cProcess3, xEnv, lExit )
-		EndIf
-
-		Return aStack
+		For nI <- 1 To Len( aList )
+			aAccum[ nI ] <- Array( Len( aList[ nI ] ) )
+			For nJ <- 1 To Len( aList[ nI ] )
+				aAccum[ nI ][ nJ ] <- Eval( bBlock, aList[ nI ][ nJ ] )
+			Next nJ
+		Next nI
+		Return aAccum

@@ -213,7 +213,7 @@ Package List(Version: 1) Where
 	List Function Filter( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
 		For nI <- 1 To Len( aList )
-			If Memoize( bBlock, aList[ nI ] )
+			If Eval( bBlock, aList[ nI ] )
 				On aAccum aAdd aList[ nI ]
 			EndIf
 		Next nI
@@ -349,7 +349,7 @@ Package List(Version: 1) Where
 	List Function Map( bBlock, aList )
 		@BUILD FIXED ACCUMULATOR aAccum<Len( aList )>
 		For nI <- 1 To Len( aList )
-			aAccum[ nI ] <- Memoize( bBlock, aList[ nI ] )
+			aAccum[ nI ] <- Eval( bBlock, aList[ nI ] )
 		Next nI
 		Return aAccum
 
@@ -460,7 +460,7 @@ Package List(Version: 1) Where
 		Let aAccum <- { { }, { } } ;
 		  , nI
 		For nI <- 1 To Len( aList )
-			If Memoize( bBlock, aList[ nI ] )
+			If Eval( bBlock, aList[ nI ] )
 				On aAccum[ 1 ] aAdd aList[ nI ]
 			Else
 				On aAccum[ 2 ] aAdd aList[ nI ]
@@ -523,7 +523,7 @@ Package List(Version: 1) Where
 	List Function Reject( bBlock, aList )
 		@BUILD ACCUMULATOR aAccum
 		For nI <- 1 To Len( aList )
-			If !Memoize( bBlock, aList[ nI ] )
+			If !Eval( bBlock, aList[ nI ] )
 				On aAccum aAdd aList[ nI ]
 			EndIf
 		Next nI
