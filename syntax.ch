@@ -156,4 +156,11 @@
  * Boolean algebraic abstraction
  */
 #xtranslate Or => .Or.
+<<<<<<< HEAD
 #xtranslate And => .And.
+=======
+#xtranslate And => .And.
+/**
+ * Restore Default
+ */
+>>>>>>> 6970ea67d078c0e3e75e3f636b9902b0ac4b7775
