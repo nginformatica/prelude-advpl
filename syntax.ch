@@ -156,11 +156,10 @@
  * Boolean algebraic abstraction
  */
 #xtranslate Or => .Or.
-<<<<<<< HEAD
 #xtranslate And => .And.
-=======
-#xtranslate And => .And.
+
 /**
- * Restore Default
+ * Tadpole operator
  */
->>>>>>> 6970ea67d078c0e3e75e3f636b9902b0ac4b7775
+#xtranslate -~<xExpr> => ( <xExpr> + 1 )
+#xtranslate ~-<xExpr> => ( <xExpr> - 1 )
