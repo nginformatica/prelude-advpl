@@ -26,6 +26,15 @@
 Package Validate(Version: 1) Where
 
 	/**
+	 * Filters and validates against SQL Injection
+	 * @param String
+	 * @return String
+	 * @author Marcelo Camargo
+	 */
+	Validate Function SQL( cEntry )
+		Return StrTran( StrTran( StrTran( cEntry, "'" ), '"' ), "--" )
+
+	/**
 	 * Validates a brazilian CEP
 	 * @param String
 	 * @return Bool
