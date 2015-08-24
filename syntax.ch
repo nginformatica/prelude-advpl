@@ -157,9 +157,3 @@
  */
 #xtranslate Or => .Or.
 #xtranslate And => .And.
-
-/**
- * Tadpole operator
- */
-#xtranslate -~<xExpr> => ( <xExpr> + 1 )
-#xtranslate ~-<xExpr> => ( <xExpr> - 1 )
