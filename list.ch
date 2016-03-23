@@ -447,6 +447,15 @@ Package List(Version: 1) Where
 			EndIf
 		Next nI
 		Return False
+	
+	/**
+	 * Returns an ordered list in decreasing order
+	 * @param Array
+	 * @param Number
+	 * @author David Branco
+	 */
+	List Function OrderDesc( aList, nFieldToOrder )
+		Return aSort( aList ,,, { |x,y| x[nFieldToOrder] > y[nFieldToOrder]} )
 
 	/**
 	 * Equivalent to [(filter f, xs), (reject f, xs)], but more efficient, using
@@ -580,7 +589,7 @@ Package List(Version: 1) Where
 	 */
 	List Function Sort( aList )
 		Return aSort( aList )
-
+	
 	/**
 	 * Receives three integers and returns an array following that range stepping by
 	 * the <nNext> - <nStart> value.
